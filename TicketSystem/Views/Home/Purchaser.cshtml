@@ -1,0 +1,34 @@
+﻿@using TicketSystem.ViewModels
+@using TicketSystem.Controllers
+@model PurchaserViewModel
+
+@{
+    ViewData["Title"] = "Purchaser";
+    Layout = "~/Views/Shared/_PurchaseLayout.cshtml";
+}
+
+<form id="ticket-form" method="post" asp-action="Purchaser" enctype="multipart/form-data">
+    <fieldset id="" class="form-horizontal spacer">
+        <h3>Purchaser Information</h3>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Email</label>
+            <div class="col-md-6">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label">Name</label>
+            <div class="col-md-6">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div id="ready-tickets" class="text-center form-group">
+            <input type="submit" class="btn btn-default" value="Ready Tickets" />
+        </div>
+    </fieldset>
+</form>
+

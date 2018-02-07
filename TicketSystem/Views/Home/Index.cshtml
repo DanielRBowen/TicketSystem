@@ -1,0 +1,38 @@
+@model IEnumerable<TicketSystem.Models.Event>
+@{
+    ViewData["Title"] = "Ticket System Home";
+    Layout = "~/Views/Shared/_TicketLayout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var purchaseEvent in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => purchaseEvent.Name)
+                    </td>
+                    <td>
+                        <a asp-area="Ticket" asp-controller="Home" asp-action="Purchase" asp-route-eventId="@purchaseEvent.Id">Purchase Tickets</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>There are no events to purchase tickets for.</p>
+}

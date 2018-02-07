@@ -1,0 +1,227 @@
+@using TicketSystem.ViewModels
+@using TicketSystem.Controllers
+@model PurchaseViewModel
+
+@{
+    ViewData["Title"] = @Model.EventName + " Ticket Purchase";
+    Layout = "~/Views/Shared/_PurchaseLayout.cshtml";
+}
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<div class="container spacer">
+    @if (Model.EventTickets.ToList().Count == 0)
+    {
+        <h1 class="text-center">There are no tickets available for this event.</h1>
+    }
+    else
+    {
+        <div class="panel panel-heading text-center">
+            <h2>
+                @ViewData["Title"] for @Model.EventName.
+                The event will be held at @Model.Location from @Model.EventStart to @Model.EventEnd
+            </h2>
+
+            <div class="panel-body">
+                @foreach (var eventTicket in Model.EventTickets)
+                {
+                    <h4>There are @eventTicket.QuantityAvailable @eventTicket.TicketType tickets left, costing @eventTicket.Price per ticket.</h4>
+                }
+            </div>
+        </div>
+
+        <div class="form-wrapper">
+            <form id="ticket-form" method="post" asp-action="Purchase" enctype="multipart/form-data">
+                <input type="hidden" name="eventId" value="@Model.EventId" />
+
+                <fieldset id="" class="form-horizontal">
+                    <h3>Purchaser Information</h3>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Email</label>
+                        <div class="col-md-6">
+                            <input asp-for="Purchaser.Email" class="form-control" />
+                            <span asp-validation-for="Purchaser.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Name</label>
+                        <div class="col-md-6">
+                            <input asp-for="Purchaser.Name" class="form-control" />
+                            <span asp-validation-for="Purchaser.Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset id="ticket-quantity" class="form-horizontal spacer">
+                    <h3>Tickets</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ticket Type
+                                </th>
+                                <th>
+                                    Price
+                                </th>
+                                <th>
+                                    Quantity
+                                </th>
+                                <th>
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int eventTicketIndex = 0; eventTicketIndex < Model.EventTickets.Count(); eventTicketIndex++)
+                            {
+                                var item = Model.EventTickets.ElementAt(eventTicketIndex);
+                                <tr>
+                                    <td>
+                                        @item.TicketType
+                                        <input type="hidden" name="ticketTypes[@eventTicketIndex].Id" value="@item.Id" />
+                                    </td>
+                                    <td>
+                                        @item.Price
+                                        <input type="hidden" class="TicketPrice" value="@item.Price" />
+                                    </td>
+                                    <td>
+                                        <select name="ticketTypes[@eventTicketIndex].Quantity" class="TicketQuantity"></select>
+                                        @*<input type="number" name="ticketTypes[@eventTicketIndex].Quantity" placeholder="0"/>*@
+                                        <!--Later change this to make it so only the quantity availiable is in the drop down, or only if less than 10-->
+                                    </td>
+                                    <td>
+                                        <span>&#3647; </span><span id="tickets[@eventTicketIndex].RowTotal" class="RowTotal"></span>
+                                        <input type="hidden" name="RowTotal[@eventTicketIndex]" class="RowTotal" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">
+                                    Totals:
+                                </th>
+                                <th>
+                                    <span>Tickets: </span><span id="ColumnTotal" class="ColumnTotal TicketQuantity"></span>
+                                </th>
+                                <th>
+                                    <span>&#3647; </span><span id="ColumnTotal" class="ColumnTotal TicketPrice"></span>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div id="ready-tickets" class="text-center hidden form-group">
+                        <input type="submit" class="btn btn-default" value="Claim Your Tickets" />
+                    </div>
+
+                    <div id="payment-div" class="text-center hidden">
+                        <div id="paypal-button"></div>
+                        <div id="confirm" style="display: none;">
+                            <div>Ship to:</div>
+                            <div><span id="recipient"></span>, <span id="line1"></span>, <span id="city"></span></div>
+                            <div><span id="state"></span>, <span id="zip"></span>, <span id="country"></span></div>
+                            <!--change this to go to the print tickets page-->
+                            <button id="confirmButton" onclick="getUserAccount(this, event); return false;">Complete Payment</button>
+                        </div>
+                        <div id="thanks" style="display: none;">
+                            Thanks, <span id="thanksname"></span>!
+                        </div>
+
+                        <script>
+                            paypal.Button.render({
+
+                                env: 'sandbox', // Or 'sandbox', 'production'
+
+                                client: {
+                                    sandbox: 'ATjufowsvc1ggtf5vMdvG1c9PdEo22wYdm3HgeLpV6gMiRcY6frfEwNzYzbdYZ-iJpawqJC9Ts4HlriJ',
+                                    production: '<insert production client id>'
+                                },
+
+                                commit: true, // Show a 'Pay Now' button
+
+                                payment: function (data, actions) {
+                                    // Set up the payment here
+                                    return actions.payment.create({
+                                        payment: {
+                                            transactions: [
+                                                {
+                                                    amount: { total: calculatePrice(), currency: 'THB' }
+
+                                                }
+                                            ]
+                                        }
+                                    });
+                                },
+
+                                onAuthorize: function (data, actions) {
+                                    // Execute the payment here
+                                    return actions.payment.execute().then(function (data) {
+                                        var shipping = data.payer.payer_info.shipping_address;
+
+                                        document.querySelector('#recipient').innerText = shipping.recipient_name;
+                                        document.querySelector('#line1').innerText = shipping.line1;
+                                        document.querySelector('#city').innerText = shipping.city;
+                                        document.querySelector('#state').innerText = shipping.state;
+                                        document.querySelector('#zip').innerText = shipping.postal_code;
+                                        document.querySelector('#country').innerText = shipping.country_code;
+
+                                        document.querySelector('#paypal-button').style.display = 'none';
+                                        document.querySelector('#confirm').style.display = 'block';
+
+                                        // Listen for click on confirm button
+
+                                        document.querySelector('#confirmButton').addEventListener('click', function () {
+
+                                            // Disable the button and show a loading message
+
+                                            document.querySelector('#confirm').innerText = 'Loading...';
+                                            document.querySelector('#confirm').disabled = true;
+
+                                            // Execute the payment
+
+                                            return actions.payment.execute().then(function () {
+
+                                                // Show a thank-you note
+
+                                                document.querySelector('#thanksname').innerText = shipping.recipient_name;
+
+                                                document.querySelector('#confirm').style.display = 'none';
+                                                document.querySelector('#thanks').style.display = 'block';
+                                            });
+                                        });
+                                    });
+                                }
+
+                            }, '#paypal-button');
+                        </script>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    }
+</div>
+
+<style>
+    .form-wrapper {
+        width: 75%;
+        margin: 0 auto 20px auto;
+    }
+
+    .form-horizontal {
+        border: 1px solid black;
+        padding: 15px;
+    }
+
+        .form-horizontal legend {
+            border-color: inherit;
+            text-align: center;
+        }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script src="~/js/purchase.js" asp-append-version="true"></script>

@@ -1,0 +1,36 @@
+﻿@using TicketSystem.ViewModels
+@using TicketSystem.Controllers
+@model ReadyAndPrintViewModel
+@{
+    ViewData["Title"] = "Ready Tickets";
+    Layout = "~/Views/Shared/_PurchaseLayout.cshtml";
+}
+
+<div class="panel panel-heading text-center spacer">
+    <h4>Please enter names for the tickets</h4>
+</div>
+
+<form asp-action="Ready">
+    <input type="hidden" asp-for="PurchaserId" />
+    <div class="form-horizontal">
+        @for (int index = 0; index < Model.TicketViewModels.Count; index++)
+        {
+            <div class="form-group">
+                <label class="col-md-3 control-label">Name: </label>
+                <div class="col-md-6">
+                    <input asp-for="@Model.TicketViewModels[index].AttendeeName" class="form-control" />
+                    <input type="hidden" asp-for="@Model.TicketViewModels[index].TicketId" />
+                </div>
+                <label class="col-md-1">Type: </label>
+                <h2 class="col-md-2">@Model.TicketViewModels[index].TicketType</h2>
+            </div>
+        }
+
+        <div class="form-group">
+            <input class="btn btn-default" type="submit" value="Print Tickets" />
+        </div>
+    </div>
+</form>
+
+
+

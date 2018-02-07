@@ -1,0 +1,45 @@
+﻿@using TicketSystem.ViewModels
+@using TicketSystem.Controllers
+@model ReadyAndPrintViewModel
+@{
+    ViewData["Title"] = "Print Tickets";
+    Layout = "~/Views/Shared/_PurchaseLayout.cshtml";
+}
+
+<div class="panel panel-heading text-center spacer">
+    <h4>Print these tickets and take them to the event.</h4>
+</div>
+
+@foreach (TicketViewModel ticketViewModel in Model.TicketViewModels)
+{
+    <div class="print-ticket spacer">
+        <div class="row">
+            <p class="col-md-2">Event:</p>
+            <p class="col-md-4">@ticketViewModel.Event</p>
+            <p class="col-md-2">Purchaser: </p>
+            <p class="col-md-4">@ticketViewModel.TicketPurchaser</p>
+        </div>
+
+        <div class="row">
+            <p class="col-md-2">Name: </p>
+            <p class="col-md-4">@ticketViewModel.AttendeeName</p>
+            <p class="col-md-2">Type: </p>
+            <p class="col-md-4">@ticketViewModel.TicketType</p>
+        </div>
+
+        <div class="row">
+            <p class="col-md-2">Date Sold: </p>
+            <p class="col-md-4">@ticketViewModel.DateSold</p>
+            <p class="col-md-2">Number: </p>
+            <p class="col-md-4">@ticketViewModel.Number</p>
+        </div>
+    </div>
+    <hr />
+}
+
+<a asp-action="Index">Back To Event List</a>
+<br />
+<a asp-action="Purchaser">View tickets purchased by username</a>
+
+
+
