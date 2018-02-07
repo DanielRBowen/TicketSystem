@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Ticket System</title>
+    <title>@ViewData["Title"] - Ticket System Admin</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -34,34 +34,7 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-left">
-
-                        @*<li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Events<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a asp-area="Ticket" asp-controller="Events" asp-action="Index">Events</a></li>
-                                <li><a asp-area="Ticket" asp-controller="EventTickets" asp-action="Index">Event Tickets</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tickets<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a asp-area="Ticket" asp-controller="Tickets" asp-action="Index">Tickets</a></li>
-                                <li><a asp-area="Ticket" asp-controller="TicketStatus" asp-action="Index">Ticket Statuses</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ticket Design<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a asp-area="Ticket" asp-controller="TicketDesigns" asp-action="Index">Ticket Designs</a></li>
-                                <li><a asp-area="Ticket" asp-controller="TicketTypes" asp-action="Index">Ticket Types</a></li>
-                                <li><a asp-area="Ticket" asp-controller="CustomFormFieldDatatypes" asp-action="Index">Form Field Types</a></li>
-                                <li><a asp-area="Ticket" asp-controller="CustomFormFieldQuestions" asp-action="Index">Form Field Questions</a></li>
-                            </ul>
-                        </li>*@
-
-
-                        <li><a asp-area="Ticket" asp-controller="Admin" asp-action="Index">Administration</a></li>
-                        <li><a asp-area="Ticket" asp-controller="Home" asp-action="Purchaser">Purchaser</a></li>
+                        <li><a asp-area="Ticket" asp-controller="Home" asp-action="Index">Events List</a></li>
                     </ul>
                 </div>
 
