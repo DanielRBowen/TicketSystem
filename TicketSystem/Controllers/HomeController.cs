@@ -31,6 +31,11 @@ namespace TicketSystem.Controllers
             return View();
         }
 
+        public IActionResult NoTicketDesign()
+        {
+            return View();
+        }
+
         public IActionResult Purchaser()
         {
             var viewModel = new PurchaserViewModel
@@ -68,9 +73,16 @@ namespace TicketSystem.Controllers
 
         public async Task<IActionResult> Purchase(int? eventId)
         {
+            var firstOrDefaultTicketDesign = ApplicationContext.TicketDesigns.FirstOrDefaultAsync(ticketDesign => ticketDesign.EventId == eventId).Result;
+
             if (eventId == null)
             {
                 return NotFound();
+            }
+
+            if (firstOrDefaultTicketDesign == null)
+            {
+                return RedirectToAction(nameof(NoTicketDesign));
             }
 
             return await PurchaseInternal(eventId.Value);
