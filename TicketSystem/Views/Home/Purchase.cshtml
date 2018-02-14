@@ -9,6 +9,15 @@
 
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
+<div class="row spacer">
+    <div class="alert alert-warning text-left">
+        <button class="close" data-dismiss="alert">&times;</button>
+        <p>This site uses JQuery to update price and allow a user to claim ticket.</p>
+        <p>The Paypal button will not work.</p>
+        <p>The application was devloped for Thailand, hence the currency is in Thai Baht</p>
+    </div>
+</div>
+
 <div class="container spacer">
     @if (Model.EventTickets.ToList().Count == 0)
     {

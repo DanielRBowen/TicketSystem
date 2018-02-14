@@ -7,6 +7,13 @@
     Layout = "~/Views/Shared/_PurchaseLayout.cshtml";
 }
 
+<div class="row spacer">
+    <div class="alert alert-warning text-left">
+        <button class="close" data-dismiss="alert">&times;</button>
+        <p>This pulls the tickets for the given e-mail.</p>
+    </div>
+</div>
+
 <form id="ticket-form" method="post" asp-action="Purchaser" enctype="multipart/form-data">
     <fieldset id="" class="form-horizontal spacer">
         <h3>Purchaser Information</h3>
