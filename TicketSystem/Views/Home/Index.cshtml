@@ -6,6 +6,16 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<div class="row spacer">
+    <div class="alert alert-warning text-left">
+        <button class="close" data-dismiss="alert">&times;</button>
+        <p>This is a group project I (Daniel Bowen) helped create in the Summer 2017 with a team of two other programmers.</p>
+        <p>I was in charge of developing the purchaser side of things.</p>
+        <p>It was built for the needs of a non-profit organization in Thailand for fundraising events.</p>
+        <p>The project was added on to an ongoing project with administration and users with the use of areas. The project can be found on GitHub <a href="https://github.com/osuarez1/PHBGTU" target="_blank">here</a>.</p>
+    </div>
+</div>
+
 @if (Model.Any())
 {
     <table class="table">
@@ -34,5 +44,7 @@
 }
 else
 {
-    <p>There are no events to purchase tickets for.</p>
+    <div class="alert alert-info" role="alert">
+        <p>There are no events to purchase tickets for.</p>
+    </div>
 }
